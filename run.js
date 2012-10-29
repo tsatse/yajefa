@@ -7,8 +7,10 @@
         }
         
         function makeParallelExecution(funcList) {
-            for(var i = 0 ; i < funcList.length ; i++) {
-                funcList[i]();
+            return function() {
+                for(var i = 0 ; i < funcList.length ; i++) {
+                    funcList[i]();
+                }
             }
         }
 
