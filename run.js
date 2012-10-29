@@ -1,8 +1,8 @@
 ﻿define(
     function() {
         function makeSerialExecution(func1, func2) {
-            return function() {
-                func1(func2);
+            return function(param) {
+                func1(func2, param);
             }
         }
         
@@ -15,9 +15,9 @@
         function parse(program) {
             var result = null;
             if(program instanceof Array && program.length > 0) {
-                result = parse(program[0]);
-                for(var i = 1 ; i < program.length ; i++) {
-                    result = makeSerialExecution(result, parse(program[i]));
+                result = parse(program[program.length - 1]);
+                for(var i = program.length - 2; i >= 0 ; i--) {
+                    result = makeSerialExecution(parse(program[i]), result);
                 }
             }
             else if(program instanceof Function) {
