@@ -15,7 +15,7 @@ define([
   ,
   function(run) {
     var program = [
-      function(callback) {
+      function(callback, additionalParameter) {
         doSomethingAsynchronousThenCallback(callback);
       },
       function(callbackResult) {
@@ -26,6 +26,6 @@ define([
   }
 ```
 
-program must be a data structure that represents the flow of your program. It must be made of nested Arrays and Objects
+*program* must be a data structure that represents the flow of your program. It must be made of nested Arrays and Objects.
 Arrays represent serial execution while Objects represent parallel execution.
-each function that's the last of a serial execution must accept a callback as argument.
+Every function but the last of a serial execution must accept a callback as argument.
