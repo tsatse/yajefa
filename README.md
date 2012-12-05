@@ -1,7 +1,7 @@
-yajafc
+yajefa
 ======
 
-yet another javascript asynchronous flow controler
+yet another javascript execution flow abstraction
 
 this is a requirejs module
 
