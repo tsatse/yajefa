@@ -10,7 +10,7 @@ this is a requirejs module
 usage in a requirejs module :
 ```
 define([
-    'yajafc'
+    'yajefa'
   ]
   ,
   function(run) {
