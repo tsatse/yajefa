@@ -8,9 +8,16 @@ void function(root) {
         }
         
         function makeParallelExecution(funcList) {
-            return function(param) {
+            var toGo = funcList.length;
+            var checkEndPoint = function(callback) {
+                toGo--;
+                if(!toGo) {
+                    callback();
+                }
+            }
+            return function(callback, param) {
                 for(var i = 0 ; i < funcList.length ; i++) {
-                    funcList[i](param);
+                    funcList[i](function() {checkEndPoint(callback)}, param);
                 }
             };
         }
