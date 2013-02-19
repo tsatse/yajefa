@@ -1,17 +1,18 @@
-﻿define(
+'use strict';
+define(
     function() {
         function makeSerialExecution(func1, func2) {
             return function(param) {
                 func1(func2, param);
-            }
+            };
         }
         
         function makeParallelExecution(funcList) {
-            return function() {
+            return function(param) {
                 for(var i = 0 ; i < funcList.length ; i++) {
-                    funcList[i]();
+                    funcList[i](param);
                 }
-            }
+            };
         }
 
         function parse(program) {
@@ -35,8 +36,8 @@
             return result;
         }
 
-        function run(program) {
-            return parse(program)();
+        function run(program, param) {
+            return parse(program)(param);
         }
 
         return run;
