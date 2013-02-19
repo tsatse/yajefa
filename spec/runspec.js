@@ -11,7 +11,6 @@ describe("The run function", function() {
         function(callback) {a+=1;callback();},
         function() {expect(a).toBe(5);}
     ]);
-    
   });
 });
 

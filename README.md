@@ -3,7 +3,6 @@ yajefa
 
 yet another javascript execution flow abstraction
 
-this is a requirejs module
 
 **untested** so use at your own risk (as a fun read). Only the documented use case was tested :) I'll update the code when I need more use cases.
 
@@ -28,4 +27,4 @@ define([
 
 *program* must be a data structure that represents the flow of your program. It must be made of nested Arrays and Objects.
 Arrays represent serial execution while Objects represent parallel execution.
-Every function but the last of a serial execution must accept a callback as argument.
+Every function but the last of a serial execution must accept a callback as an argument.
