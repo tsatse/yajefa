@@ -1,6 +1,6 @@
-'use strict';
-define(
-    function() {
+void function(root) {
+    function definitionFunction() {
+        'use strict';
         function makeSerialExecution(func1, func2) {
             return function(param) {
                 func1(func2, param);
@@ -42,4 +42,32 @@ define(
 
         return run;
     }
-);
+     
+    if ( typeof define === 'function' && define.amd ) {
+        console.log('define')
+        define(definitionFunction);
+    }
+    else if ( typeof module === 'object' && module.exports ) {
+        console.log('module')
+        module.exports.run = definitionFunction();
+    }
+    /*else if(typeof process !== "undefined") {
+        console.log('process')
+        exports.run = definitionFunction();
+    }*/
+    else {
+        console.log('root')
+        root.run = run;
+    }
+} (this);
+
+/*
+if(typeof define !== 'undefined') {
+    define(definitionFunction);
+}
+else if(typeof process !== "undefined") {
+    exports.run = definitionFunction();
+}
+else {
+    run = definitionFunction();
+}*/
