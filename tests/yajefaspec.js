@@ -1,18 +1,18 @@
 describe('run()', function() {
-    var yajefa = require('../run');
-    var a,b,c,d;
+    var yajefa = require('../yajefa');
+    var a, b, c, d;
 
     beforeEach(function() {
-        a=b=c=d=0;
+        a = b = c = d = 0;
     });
 
     it('should execute an array of functions sequentially', function() {
         yajefa.run([
-            function(callback) {a+=1; callback();},
-            function(callback) {a+=1; callback();},
-            function(callback) {a+=1; callback();},
-            function(callback) {a+=1; callback();},
-            function(callback) {a+=1; callback();},
+            function(callback) {a += 1; callback();},
+            function(callback) {a += 1; callback();},
+            function(callback) {a += 1; callback();},
+            function(callback) {a += 1; callback();},
+            function(callback) {a += 1; callback();},
             function() {expect(a).toBe(5);}
         ]);
     });
