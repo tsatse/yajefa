@@ -4,7 +4,7 @@ yajefa
 yet another javascript execution flow abstraction
 
 
-**untested** so use at your own risk (as a fun read). Only the documented use case was tested :) I'll update the code when I need more use cases.
+**not very tested** so use at your own risk (as a fun read). Only the documented use case was tested :) I'll update the code when I need more use cases.
 
 usage in a requirejs module :
 ```
