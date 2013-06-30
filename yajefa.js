@@ -2,11 +2,13 @@ void function(root) {
     function definitionFunction() {
         'use strict';
         function _makeSerialExecution(func1, func2) {
-            return function(param) {
-                func1(func2, param);
+            return function(overallCallback, param) {
+                func1(function(cb, p) {
+                    func2(overallCallback, p);
+                }, param);
             };
         }
-        
+
         function _makeParallelExecution(funcList) {
             var toGo = funcList.length;
             var checkEndPoint = function(callback) {
@@ -22,22 +24,25 @@ void function(root) {
             };
         }
 
-        function _parse(program) {
-            var result = null;
+        function parse(program) {
+            var result = null,
+                params = [],
+                index;
             switch(_programToType(program)) {
                 case 'Array':
-                    result = _parse(program[program.length - 1]);
+                    result = parse(program[program.length - 1]);
                     for(var i = program.length - 2; i >= 0 ; i--) {
-                        result = _makeSerialExecution(_parse(program[i]), result);
+                        result = _makeSerialExecution(parse(program[i]), result);
                     }
                     break;
                 case 'Function':
                     result = program;
                     break;
                 case 'Object':
-                    var params = [];
-                    for(var index in program) {
-                        params.push(_parse(program[index]));
+                    for(index in program) {
+                        if(program.hasOwnProperty(index)) {
+                            params.push(parse(program[index]));
+                        }
                     }
                     result = _makeParallelExecution(params);
                     break;
@@ -57,42 +62,58 @@ void function(root) {
             }
         }
 
-        function run(program, param) {
-            return _parse(program)(param);
+        function run(program, param, callback) {
+            return parse(program)(callback, param);
         }
 
         function prepend(program, callback) {
+            var i,
+                keys;
             switch(_programToType(program)) {
                 case 'Array':
-                    for(var i = 0 ; i < program.length ; i++) {
-                        program[i] = prepend(program[i], callback);
+                    for(i = 0 ; i < program.length ; i++) {
+                        program[i] = [callback, program[i]];
                     }
                     break;
                 case 'Function':
-                case 'Object':
                     return [callback, program];
+                case 'Object':
+                    keys = Object.keys(program);
+                    for(i = 0 ; i < keys.length ; i++) {
+                        program[keys[i]] = [callback, program[i]];
+                    }
             }
+            return program;
         }
+
         function postpend(program, callback) {
+            var i,
+                keys;
             switch(_programToType(program)) {
                 case 'Array':
-                    for(var i = 0 ; i < program.length ; i++) {
-                        program[i] = postpend(program[i], callback);
+                    for(i = 0 ; i < program.length ; i++) {
+                        program[i] = [program[i], callback];
                     }
                     break;
                 case 'Function':
-                case 'Object':
                     return [program, callback];
+                case 'Object':
+                    keys = Object.keys(program);
+                    for(i = 0 ; i < keys.length ; i++) {
+                        program[keys[i]] = [program[i], callback];
+                    }
             }
+            return program;
         }
 
         return {
             run: run,
+            parse: parse,
             prepend: prepend,
             postpend: postpend
         };
     }
-     
+
     if ( typeof define === 'function' && define.amd ) {
         console.log('define')
         define(definitionFunction);
@@ -110,14 +131,3 @@ void function(root) {
         root.yajefa = definitionFunction();
     }
 } (this);
-
-/*
-if(typeof define !== 'undefined') {
-    define(definitionFunction);
-}
-else if(typeof process !== "undefined") {
-    exports.run = definitionFunction();
-}
-else {
-    run = definitionFunction();
-}*/

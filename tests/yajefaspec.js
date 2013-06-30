@@ -7,14 +7,21 @@ describe('run()', function() {
     });
 
     it('should execute an array of functions sequentially', function() {
+        var spiedStuff = {
+                testEndCallback: function() {
+                    console.log('*** eee');
+                }
+            };
+        spyOn(spiedStuff, 'testEndCallback');
         yajefa.run([
             function(callback) {a += 1; callback();},
             function(callback) {a += 1; callback();},
             function(callback) {a += 1; callback();},
             function(callback) {a += 1; callback();},
             function(callback) {a += 1; callback();},
-            function() {expect(a).toBe(5);}
-        ]);
+            function(callback) {expect(a).toBe(5);callback()}
+        ], null, spiedStuff.testEndCallback);
+        expect(spiedStuff.testEndCallback).toHaveBeenCalled();
     });
 
     it('should wait for all parallel functions to finish before calling another function in sequence', function() {
@@ -42,3 +49,41 @@ describe('run()', function() {
     });
 });
 
+
+describe('parse()', function() {
+    // TODO
+});
+
+
+describe('prepend()', function() {
+    var yajefa = require('../yajefa'),
+        a,
+        called = false;
+
+    beforeEach(function() {
+        a = 1;
+    });
+
+    it('should add a function before every element in a list', function() {
+        var program = [
+                function(callback) {a *= 5;callback();}
+            ],
+            spiedStuff = {
+                testEndCallback: function() {
+                    expect(a).toBe(0);
+                }
+            };
+        spyOn(spiedStuff, 'testEndCallback');
+        yajefa.prepend(program, function(callback) {a = 0;callback();});
+        yajefa.run(
+            program,
+            null,
+            spiedStuff.testEndCallback
+            );
+        expect(spiedStuff.testEndCallback).toHaveBeenCalled();
+    });
+
+    it('should add a function before every element in an object', function() {
+        // TODO
+    });
+});
